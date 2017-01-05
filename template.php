@@ -12,26 +12,48 @@
 /** @var CBitrixComponent $component */
 $this->setFrameMode(true);
 ?>	
-
-
-   <div class="block_content_right" >	
+<div class="block_content_right" >	
 	                             
 	 <div class="video_content" >
+<?foreach($arResult["ITEMS"] as $arItem):?>
+	<?$enum_fields = $arItem["PROPERTIES"]?>
+
+
+   
 	 
 
-	   <div class="video_top" >
-										 
-        <img src="<?=SITE_TEMPLATE_PATH?>/images/video/video_1.jpg" />
-		<h3><a href="/">Дизайн ногтей с использованием гель-лака «Кошачий глаз», Витражного гель-лака и акриловой краски</a></h3>
-		<p>Магнитные гель-лаки всегда весьма эффектно выглядят на ногтях. Давайте вместе рассмотрим все этапы создания маникюра 
-		с использованием нескольких гель-лаков и акриловой краски. И результат - один из вариантов неповторимого дизайна ногтей.</p>
-			<span class="news_date">16 октября 2016</span>
-			</div><!--video_top-->	
+	<?if ($enum_fields["MAIN_VIDEO"]["VALUE"] == "Y") { ?>
+			<div class="video_top">   <!-- video top -->
+			<a href="#win<?=$this->GetEditAreaId($arItem['ID']);?>"><img src="<?=$arItem["PREVIEW_PICTURE"]["SRC"]?>" width="540" heigh="360" class="news_img_1170" alt="<?=$arItem["PREVIEW_PICTURE"]["ALT"]?>" title="<?=$arItem["PREVIEW_PICTURE"]["TITLE"]?>" /></a>
+			<h3><a href="<?echo $arItem['ID']["DETAIL_PAGE_URL"]?>"><?echo $arItem["NAME"]?></a></h3>
+			<p><?echo $arItem["PREVIEW_TEXT"];?></p>
+			
+			
+			 <span class="news_date"> <!-- Вывод даты -->
+			
+			<?foreach($arItem["DISPLAY_PROPERTIES"] as $pid=>$arProperty):?>
+<?
+$arParams["DATE_CREATE"]="j F Y";
+echo CIBlockFormatProperties::DateFormat($arParams["DATE_CREATE"], MakeTimeStamp($arProperty["DISPLAY_VALUE"], CSite::GetDateFormat()));
+?>
+		<?endforeach;?>
+		</span>
+
+		
+			 
+			 
+			</div>   <!-- video top -->
+
+			
+			<? } ?>   
+<?endforeach;?>
+
+<?//echo "<pre>"; print_r($arItem); echo "</pre>";?>
 
 			<div class="video_bott" >
 
 	<?foreach($arResult["ITEMS"] as $arItem):?>
-
+ 
 
 			<?
 			$this->AddEditAction($arItem['ID'], $arItem['EDIT_LINK'], CIBlock::GetArrayByID($arItem["IBLOCK_ID"], "ELEMENT_EDIT"));
@@ -51,8 +73,17 @@ $this->setFrameMode(true);
 							</div> 
 				</a> 
 		
+
 					<h3><a href="<?echo $arItem["DETAIL_PAGE_URL"]?>"><?echo $arItem["NAME"]?></b></a><br /></h3><!--Вывод заголовка видео-->
-					 <span class="news_date"><? echo $arItem["TIMESTAMP_X"]?></span>
+					 	   <span class="news_date">
+			
+			<?foreach($arItem["DISPLAY_PROPERTIES"] as $pid=>$arProperty):?>
+			<?
+$arParams["DATE_CREATE"]="j F Y";
+echo CIBlockFormatProperties::DateFormat($arParams["DATE_CREATE"], MakeTimeStamp($arProperty["DISPLAY_VALUE"], CSite::GetDateFormat()));
+?>
+		<?endforeach;?>
+		</span> 
 					</div><!-- .video_bott_text-->
 					
 	<?endforeach;?>
@@ -64,29 +95,7 @@ $this->setFrameMode(true);
 <?endif;?>
 						 	
 	 </div><!-- .block_content_right -->
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	 
+	 
+	 
+	 
