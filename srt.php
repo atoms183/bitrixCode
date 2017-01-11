@@ -45,6 +45,9 @@
 								     <div class="compr_table_right" >
 								       
 									   <div class="compr_table_right_scroll" >
+									   
+									   
+									   
 																			
 										<div class="compr_table_wrap compr_table_1" >
 								          <table class="compr_table_tovar" >
@@ -62,7 +65,7 @@
 												 <td><span>Название товара</span><p><?=$arResult["ITEMS"]["0"]["NAME"]?></p></td>
 											 </tr>
 											 <tr>
-												 <td><span>Артикул</span><p><?=$arResult["ITEMS"]["0"]["CODE"]?></p></td>
+												 <td><span>Артикул</span><p><?=$arResult["ITEMS"]["0"]["PROPERTIES"]["ARTIKYL"]["VALUE"]?></p></td>
 											 </tr>
 											 <tr>
 												 <td><span>Объем</span><p><?=$arResult["SHOW_PROPERTIES"]["CONTENT"]["VALUE"]?></p></td>
@@ -80,6 +83,7 @@
 									      </table>				
 										  <a href="#" class="compr_table_kypit" /><i class="fa fa-shopping-basket" aria-hidden="true"></i>купить</a>
 									    </div>	<!-- .compr_table_wrap1 -->
+										
 										
 								        
 										
