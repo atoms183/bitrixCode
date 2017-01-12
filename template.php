@@ -70,11 +70,8 @@ echo CIBlockFormatProperties::DateFormat($arParams["DATE_CREATE"], MakeTimeStamp
 							<iframe width="853" height="480" src="<?echo $arItem["PROPERTIES"]["YOUTUBE"]["VALUE"];?>" frameborder="0" allowfullscreen></iframe> <!--Вывод видео с youtube-->
 							</div>
 								<a class="close" title="Закрыть" href="#x"></a>
-							</div> 
-				</a> 
-		
-
-					<h3><a href="<?echo $arItem["DETAIL_PAGE_URL"]?>"><?echo $arItem["NAME"]?></b></a><br /></h3><!--Вывод заголовка видео-->
+							</div>  
+					<h3><a><?echo $arItem["NAME"]?><br /></a></h3><!--Вывод заголовка видео-->
 					 	   <span class="news_date">
 			
 			<?foreach($arItem["DISPLAY_PROPERTIES"] as $pid=>$arProperty):?>
@@ -95,7 +92,3 @@ echo CIBlockFormatProperties::DateFormat($arParams["DATE_CREATE"], MakeTimeStamp
 <?endif;?>
 						 	
 	 </div><!-- .block_content_right -->
-	 
-	 
-	 
-	 
