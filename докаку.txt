@@ -1,0 +1,899 @@
+<?if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true)die();
+/** @var array $arParams */
+/** @var array $arResult */
+/** @global CMain $APPLICATION */
+/** @global CUser $USER */
+/** @global CDatabase $DB */
+/** @var CBitrixComponentTemplate $this */
+/** @var string $templateName */
+/** @var string $templateFile */
+/** @var string $templateFolder */
+/** @var string $componentPath */
+/** @var CBitrixComponent $component */
+$this->setFrameMode(true);
+?>
+
+<?
+echo "<pre>";
+//print_r($arResult);
+echo "</pre>";
+?>
+
+
+
+<div id="accordion" class="accordion">
+
+
+		<?
+		$this->AddEditAction($arItem['ID'], $arItem['EDIT_LINK'], CIBlock::GetArrayByID($arItem["IBLOCK_ID"], "ELEMENT_EDIT"));
+		$this->AddDeleteAction($arItem['ID'], $arItem['DELETE_LINK'], CIBlock::GetArrayByID($arItem["IBLOCK_ID"], "ELEMENT_DELETE"), array("CONFIRM" => GetMessage('CT_BNL_ELEMENT_DELETE_CONFIRM')));
+		?>
+
+
+<?php
+$IBLOCK_ID    = 22;
+$arSelect = array('ID', 'NAME', 'CODE', 'XML_ID', 'IBLOCK_ID', 'IBLOCK_SECTION_ID', 'PROPERTY_DOC');
+$arFilter    = Array(
+      'IBLOCK_ID'=>$IBLOCK_ID, 
+      'GLOBAL_ACTIVE'=>'Y');
+$obSection    = CIBlockSection::GetTreeList($arFilter, $arSelect);
+
+?> 
+
+<?while($arResult = $obSection->GetNext()){?>
+ <?  for($i=0;$i<=($arResult['DEPTH_LEVEL']-2);$i++)
+    echo "..";
+echo "<h3>";
+     echo $arResult['NAME'].'<br>';
+	echo "</h3>";?>
+
+
+
+
+
+
+  <div class="document">
+<table cellspacing="0" style="background:#fff;">
+<tbody>
+<?
+$arSelect = Array("ID", "IBLOCK_ID", "NAME", "DATE_ACTIVE_FROM","PROPERTY_URL", "PROPERTY_VISIBILITYURL", "PROPERTY_VISIBILITY", "PROPERTY_DOWNLOAD", "PROPERTY_DOC_FILE", "PROPERTY_NAZVANIE", "PROPERTY_RAZMER");
+$arFilter = Array("IBLOCK_ID"=>22, "SECTION_ID"=> $arResult["ID"], "ACTIVE_DATE"=>"Y", "ACTIVE"=>"Y");
+$res = CIBlockElement::GetList(Array(), $arFilter, false, Array("nPageSize"=>50), $arSelect);
+while($ob = $res->GetNextElement())
+{?>
+<?
+$arFields = $ob->GetFields();
+$arProps = $ob->GetProperties();
+?>
+<tr>
+
+
+
+<?
+
+ //print_r($arProps["DOC_FILE"]["DESCRIPTION"]["0"]);
+?>
+
+
+<?
+if ($arProps["VISIBILITYURL"]["VALUE"] == '' ){?>
+<?
+
+if ( CSite::InGroup( array(1,2,6,5,13,10,12,11,9,8) ) ){
+$res123 = CIBlock::GetByID($_GET["BID"]);
+if($ar_res = $res123->GetNext())
+echo "";} 
+else {echo "<p style='color:#666666;font-size:16px;'>У вас нет доступа к просмотру, обратитесь к администрации</p>";}
+
+
+?>	
+<?}
+?>
+
+<?if ($arProps["VISIBILITYURL"]["VALUE"] == 1 ){?>
+<?
+if ( CSite::InGroup( array(1) ) ){
+$res123 = CIBlock::GetByID($_GET["BID"]);
+if ($ar_res = $res123->GetNext()){?>
+<td width="1px"><img src="<?=CFile::GetPath($arProps["ICONCASSILKA"]["VALUE"]);?>" width="35px" height="35px"></td>
+<td>
+<div class="docLink" style="width: 530px;">
+<p style='color:#666666;font-size:16px;'><?=$arFields["PROPERTY_NAZVANIE_VALUE"];?></p><td><?=$arFields["PROPERTY_RAZMER_VALUE"];?> <a href="<?=$arFields["PROPERTY_URL_VALUE"];?>" target="_blank" style="text-decoration: none;" download>    Скачать</a></td>
+</div>
+</td>
+<?}}
+else {?>
+<?if($USER->IsAuthorized()): // Если пользователь авторизован, то даем информацию?>
+<? echo "<p style='color:#666666;font-size:16px;'>У вас нет прав к просмотру документа</p>"; ?>
+<?endif;?>
+<?if(!$USER->IsAuthorized()): // Если пользователь не авторизован, то даем информацию?>
+<p style='color:#666666;font-size:16px;'>Для просмотра документа вам необходимо <a href="/auth/">войти</a> или <a href="/auth/reg.php">зарегистрироваться</a>.</p>
+<?endif;?>
+<?}?>
+<?}?>
+
+
+
+
+<?if ($arProps["VISIBILITYURL"]["VALUE"] == 2 ){?>
+<?
+if ( CSite::InGroup( array(2) ) ){
+$res123 = CIBlock::GetByID($_GET["BID"]);
+if ($ar_res = $res123->GetNext()){?>
+<td width="1px"><img src="<?=CFile::GetPath($arProps["ICONCASSILKA"]["VALUE"]);?>" width="35px" height="35px"></td>
+<td>
+<div class="docLink" style="width: 530px;">
+<p style='color:#666666;font-size:16px;'><?=$arFields["PROPERTY_NAZVANIE_VALUE"];?></p><td><?=$arFields["PROPERTY_RAZMER_VALUE"];?> <a href="<?=$arFields["PROPERTY_URL_VALUE"];?>" target="_blank" style="text-decoration: none;" download>    Скачать</a></td>
+</div>
+</td>
+<?}}
+else {?>
+<?if($USER->IsAuthorized()): // Если пользователь авторизован, то даем информацию?>
+<? echo "<p style='color:#666666;font-size:16px;'>У вас нет прав к просмотру документа</p>"; ?>
+<?endif;?>
+<?if(!$USER->IsAuthorized()): // Если пользователь не авторизован, то даем информацию?>
+<p style='color:#666666;font-size:16px;'>Для просмотра документа вам необходимо <a href="/auth/">войти</a> или <a href="/auth/reg.php">зарегистрироваться</a>.</p>
+<?endif;?>
+<?}?>
+<?}?>
+
+
+<?if ($arProps["VISIBILITYURL"]["VALUE"] == 3 ){?>
+<?
+if ( CSite::InGroup( array(3) ) ){
+$res123 = CIBlock::GetByID($_GET["BID"]);
+if ($ar_res = $res123->GetNext()){?>
+<td width="1px"><img src="<?=CFile::GetPath($arProps["ICONCASSILKA"]["VALUE"]);?>" width="35px" height="35px"></td>
+<td>
+<div class="docLink" style="width: 530px;">
+<p style='color:#666666;font-size:16px;'><?=$arFields["PROPERTY_NAZVANIE_VALUE"];?></p><td><?=$arFields["PROPERTY_RAZMER_VALUE"];?> <a href="<?=$arFields["PROPERTY_URL_VALUE"];?>" target="_blank" style="text-decoration: none;" download>    Скачать</a></td>
+</div>
+</td>
+<?}}
+else {?>
+<?if($USER->IsAuthorized()): // Если пользователь авторизован, то даем информацию?>
+<? echo "<p style='color:#666666;font-size:16px;'>У вас нет прав к просмотру документа</p>"; ?>
+<?endif;?>
+<?if(!$USER->IsAuthorized()): // Если пользователь не авторизован, то даем информацию?>
+<p style='color:#666666;font-size:16px;'>Для просмотра документа вам необходимо <a href="/auth/">войти</a> или <a href="/auth/reg.php">зарегистрироваться</a>.</p>
+<?endif;?>
+<?}?>
+<?}?>
+
+
+<?if ($arProps["VISIBILITYURL"]["VALUE"]["1"] == 5 ){?>
+<?
+if ( CSite::InGroup( array(5) ) ){
+$res123 = CIBlock::GetByID($_GET["BID"]);
+if ($ar_res = $res123->GetNext()){?>
+<td width="1px"><img src="<?=CFile::GetPath($arProps["ICONCASSILKA"]["VALUE"]);?>" width="35px" height="35px"></td>
+<td>
+<div class="docLink" style="width: 530px;">
+<p style='color:#666666;font-size:16px;'><?=$arFields["PROPERTY_NAZVANIE_VALUE"];?></p><td><?=$arFields["PROPERTY_RAZMER_VALUE"];?> <a href="<?=$arFields["PROPERTY_URL_VALUE"];?>" target="_blank" style="text-decoration: none;" download>    Скачать</a></td>
+</div>
+</td>
+<?}}
+else {?>
+<?if($USER->IsAuthorized()): // Если пользователь авторизован, то даем информацию?>
+<? echo "<p style='color:#666666;font-size:16px;'>У вас нет прав к просмотру документа</p>"; ?>
+<?endif;?>
+<?if(!$USER->IsAuthorized()): // Если пользователь не авторизован, то даем информацию?>
+<p style='color:#666666;font-size:16px;'>Для просмотра документа вам необходимо <a href="/auth/">войти</a> или <a href="/auth/reg.php">зарегистрироваться</a>.</p>
+<?endif;?>
+<?}?>
+<?}?>
+
+
+<?if ($arProps["VISIBILITYURL"]["VALUE"] == 13 ){?>
+<?
+if ( CSite::InGroup( array(13) ) ){
+$res123 = CIBlock::GetByID($_GET["BID"]);
+if ($ar_res = $res123->GetNext()){?>
+<td width="1px"><img src="<?=CFile::GetPath($arProps["ICONCASSILKA"]["VALUE"]);?>" width="35px" height="35px"></td>
+<td>
+<div class="docLink" style="width: 530px;">
+<p style='color:#666666;font-size:16px;'><?=$arFields["PROPERTY_NAZVANIE_VALUE"];?></p><td><?=$arFields["PROPERTY_RAZMER_VALUE"];?> <a href="<?=$arFields["PROPERTY_URL_VALUE"];?>" target="_blank" style="text-decoration: none;" download>    Скачать</a></td>
+</div>
+</td>
+<?}}
+else {?>
+<?if($USER->IsAuthorized()): // Если пользователь авторизован, то даем информацию?>
+<? echo "<p style='color:#666666;font-size:16px;'>У вас нет прав к просмотру документа</p>"; ?>
+<?endif;?>
+<?if(!$USER->IsAuthorized()): // Если пользователь не авторизован, то даем информацию?>
+<p style='color:#666666;font-size:16px;'>Для просмотра документа вам необходимо <a href="/auth/">войти</a> или <a href="/auth/reg.php">зарегистрироваться</a>.</p>
+<?endif;?>
+<?}?>
+<?}?>
+
+
+<?if ($arProps["VISIBILITYURL"]["VALUE"] == 10 ){?>
+<?
+if ( CSite::InGroup( array(10) ) ){
+$res123 = CIBlock::GetByID($_GET["BID"]);
+if ($ar_res = $res123->GetNext()){?>
+<td width="1px"><img src="<?=CFile::GetPath($arProps["ICONCASSILKA"]["VALUE"]);?>" width="35px" height="35px"></td>
+<td>
+<div class="docLink" style="width: 530px;">
+<p style='color:#666666;font-size:16px;'><?=$arFields["PROPERTY_NAZVANIE_VALUE"];?></p><td><?=$arFields["PROPERTY_RAZMER_VALUE"];?> <a href="<?=$arFields["PROPERTY_URL_VALUE"];?>" target="_blank" style="text-decoration: none;" download>    Скачать</a></td>
+</div>
+</td>
+<?}}
+else {?>
+<?if($USER->IsAuthorized()): // Если пользователь авторизован, то даем информацию?>
+<? echo "<p style='color:#666666;font-size:16px;'>У вас нет прав к просмотру документа</p>"; ?>
+<?endif;?>
+<?if(!$USER->IsAuthorized()): // Если пользователь не авторизован, то даем информацию?>
+<p style='color:#666666;font-size:16px;'>Для просмотра документа вам необходимо <a href="/auth/">войти</a> или <a href="/auth/reg.php">зарегистрироваться</a>.</p>
+<?endif;?>
+<?}?>
+<?}?>
+
+
+<?if ($arProps["VISIBILITYURL"]["VALUE"] == 12 ){?>
+<?
+if ( CSite::InGroup( array(12) ) ){
+$res123 = CIBlock::GetByID($_GET["BID"]);
+if ($ar_res = $res123->GetNext()){?>
+<td width="1px"><img src="<?=CFile::GetPath($arProps["ICONCASSILKA"]["VALUE"]);?>" width="35px" height="35px"></td>
+<td>
+<div class="docLink" style="width: 530px;">
+<p style='color:#666666;font-size:16px;'><?=$arFields["PROPERTY_NAZVANIE_VALUE"];?></p><td><?=$arFields["PROPERTY_RAZMER_VALUE"];?> <a href="<?=$arFields["PROPERTY_URL_VALUE"];?>" target="_blank" style="text-decoration: none;" download>    Скачать</a></td>
+</div>
+</td>
+<?}}
+else {?>
+<?if($USER->IsAuthorized()): // Если пользователь авторизован, то даем информацию?>
+<? echo "<p style='color:#666666;font-size:16px;'>У вас нет прав к просмотру документа</p>"; ?>
+<?endif;?>
+<?if(!$USER->IsAuthorized()): // Если пользователь не авторизован, то даем информацию?>
+<p style='color:#666666;font-size:16px;'>Для просмотра документа вам необходимо <a href="/auth/">войти</a> или <a href="/auth/reg.php">зарегистрироваться</a>.</p>
+<?endif;?>
+<?}?>
+<?}?>
+
+
+<?if ($arProps["VISIBILITYURL"]["VALUE"] == 11 ){?>
+<?
+if ( CSite::InGroup( array(11) ) ){
+$res123 = CIBlock::GetByID($_GET["BID"]);
+if ($ar_res = $res123->GetNext()){?>
+<td width="1px"><img src="<?=CFile::GetPath($arProps["ICONCASSILKA"]["VALUE"]);?>" width="35px" height="35px"></td>
+<td>
+<div class="docLink" style="width: 530px;">
+<p style='color:#666666;font-size:16px;'><?=$arFields["PROPERTY_NAZVANIE_VALUE"];?></p><td><?=$arFields["PROPERTY_RAZMER_VALUE"];?> <a href="<?=$arFields["PROPERTY_URL_VALUE"];?>" target="_blank" style="text-decoration: none;" download>    Скачать</a></td>
+</div>
+</td>
+<?}}
+else {?>
+<?if($USER->IsAuthorized()): // Если пользователь авторизован, то даем информацию?>
+<? echo "<p style='color:#666666;font-size:16px;'>У вас нет прав к просмотру документа</p>"; ?>
+<?endif;?>
+<?if(!$USER->IsAuthorized()): // Если пользователь не авторизован, то даем информацию?>
+<p style='color:#666666;font-size:16px;'>Для просмотра документа вам необходимо <a href="/auth/">войти</a> или <a href="/auth/reg.php">зарегистрироваться</a>.</p>
+<?endif;?>
+<?}?>
+<?}?>
+
+
+<?if ($arProps["VISIBILITYURL"]["VALUE"] == 9 ){?>
+<?
+if ( CSite::InGroup( array(9) ) ){
+$res123 = CIBlock::GetByID($_GET["BID"]);
+if ($ar_res = $res123->GetNext()){?>
+<td width="1px"><img src="<?=CFile::GetPath($arProps["ICONCASSILKA"]["VALUE"]);?>" width="35px" height="35px"></td>
+<td>
+<div class="docLink" style="width: 530px;">
+<p style='color:#666666;font-size:16px;'><?=$arFields["PROPERTY_NAZVANIE_VALUE"];?></p><td><?=$arFields["PROPERTY_RAZMER_VALUE"];?> <a href="<?=$arFields["PROPERTY_URL_VALUE"];?>" target="_blank" style="text-decoration: none;" download>    Скачать</a></td>
+</div>
+</td>
+<?}}
+else {?>
+<?if($USER->IsAuthorized()): // Если пользователь авторизован, то даем информацию?>
+<? echo "<p style='color:#666666;font-size:16px;'>У вас нет прав к просмотру документа</p>"; ?>
+<?endif;?>
+<?if(!$USER->IsAuthorized()): // Если пользователь не авторизован, то даем информацию?>
+<p style='color:#666666;font-size:16px;'>Для просмотра документа вам необходимо <a href="/auth/">войти</a> или <a href="/auth/reg.php">зарегистрироваться</a>.</p>
+<?endif;?>
+<?}?>
+<?}?>
+
+<?if ($arProps["VISIBILITYURL"]["VALUE"] == 8 ){?>
+<?
+if ( CSite::InGroup( array(8) ) ){
+$res123 = CIBlock::GetByID($_GET["BID"]);
+if ($ar_res = $res123->GetNext()){?>
+<td width="1px"><img src="<?=CFile::GetPath($arProps["ICONCASSILKA"]["VALUE"]);?>" width="35px" height="35px"></td>
+<td>
+<div class="docLink" style="width: 530px;">
+<p style='color:#666666;font-size:16px;'><?=$arFields["PROPERTY_NAZVANIE_VALUE"];?></p><td><?=$arFields["PROPERTY_RAZMER_VALUE"];?> <a href="<?=$arFields["PROPERTY_URL_VALUE"];?>" target="_blank" style="text-decoration: none;" download>    Скачать</a></td>
+</div>
+</td>
+<?}}
+else {?>
+<?if($USER->IsAuthorized()): // Если пользователь авторизован, то даем информацию?>
+<? echo "<p style='color:#666666;font-size:16px;'>У вас нет прав к просмотру документа</p>"; ?>
+<?endif;?>
+<?if(!$USER->IsAuthorized()): // Если пользователь не авторизован, то даем информацию?>
+<p style='color:#666666;font-size:16px;'>Для просмотра документа вам необходимо <a href="/auth/">войти</a> или <a href="/auth/reg.php">зарегистрироваться</a>.</p>
+<?endif;?>
+<?}?>
+<?}?>
+
+<?if ($arProps["VISIBILITYURL"]["VALUE"] == 14 ){?>
+<?
+if ( CSite::InGroup( array(14) ) ){
+$res123 = CIBlock::GetByID($_GET["BID"]);
+if ($ar_res = $res123->GetNext()){?>
+<p style='color:#666666;font-size:16px;'><?=$arFields["PROPERTY_NAZVANIE_VALUE"];?></p><td><?=$arFields["PROPERTY_RAZMER_VALUE"];?> <a href="<?=$arFields["PROPERTY_URL_VALUE"];?>" target="_blank" style="text-decoration: none;" download>    Скачать</a></td>
+<?}}
+else {?>
+<?if($USER->IsAuthorized()): // Если пользователь авторизован, то даем информацию?>
+<? echo "<p style='color:#666666;font-size:16px;'>У вас нет прав к просмотру документа</p>"; ?>
+<?endif;?>
+<?if(!$USER->IsAuthorized()): // Если пользователь не авторизован, то даем информацию?>
+<p style='color:#666666;font-size:16px;'>Для просмотра документа вам необходимо <a href="/auth/">войти</a> или <a href="/auth/reg.php">зарегистрироваться</a>.</p>
+<?endif;?>
+<?}?>
+<?}?>
+
+
+
+<?foreach($arProps["DOC_FILE"]["DESCRIPTION"] as $arDoc123):?>
+
+<?
+if ($arProps["VISIBILITY"]["VALUE"] == ''){?>
+<?
+if ( CSite::InGroup( array(1,2,6,5,13,10,12,11,9,8) ) ):
+$res123 = CIBlock::GetByID($_GET["BID"]);
+if($ar_res = $res123->GetNext())
+echo "У вас нет доступа к просмотру, обратитесь к администрации";
+endif;
+?>	
+<?}
+?>
+
+
+<?
+if ($arProps["VISIBILITY"]["VALUE"] == 1 ){?>
+<td width="1px"><img src="<?=CFile::GetPath($arProps["ICONCAFILE"]["VALUE"]);?>" width="35px" height="35px"></td>
+<td>
+<div class="docLink" style="width: 530px;">
+<?
+if ( CSite::InGroup( array(1) ) ){
+$res123 = CIBlock::GetByID($_GET["BID"]);
+if($ar_res = $res123->GetNext())
+echo $arDoc123;} 
+else {?>
+<?if($USER->IsAuthorized()): // Если пользователь авторизован, то даем информацию?>
+<? echo "<p style='color:#666666;font-size:16px;'>У вас нет прав к просмотру документа</p>"; ?>
+<?endif;?>
+<?if(!$USER->IsAuthorized()): // Если пользователь не авторизован, то даем информацию?>
+<p style='color:#666666;font-size:16px;'>Для просмотра документа вам необходимо <a href="/auth/">войти</a> или <a href="/auth/reg.php">зарегистрироваться</a>.</p>
+<?endif;?>
+<?}?>
+</div>
+</td>
+<?}
+?>
+
+<?
+if ($arProps["VISIBILITY"]["VALUE"] == 2 ){?>
+<td width="1px"><img src="<?=CFile::GetPath($arProps["ICONCAFILE"]["VALUE"]);?>" width="35px" height="35px"></td>
+<td>
+<div class="docLink" style="width: 530px;">
+<?
+if ( CSite::InGroup( array(2) ) ){
+$res123 = CIBlock::GetByID($_GET["BID"]);
+if($ar_res = $res123->GetNext())
+echo $arDoc123;} 
+else {?>
+<?if($USER->IsAuthorized()): // Если пользователь авторизован, то даем информацию?>
+<? echo "<p style='color:#666666;font-size:16px;'>У вас нет прав к просмотру документа</p>"; ?>
+<?endif;?>
+<?if(!$USER->IsAuthorized()): // Если пользователь не авторизован, то даем информацию?>
+<p style='color:#666666;font-size:16px;'>Для просмотра документа вам необходимо <a href="/auth/">войти</a> или <a href="/auth/reg.php">зарегистрироваться</a>.</p>
+<?endif;?>
+<?}?>
+</div>
+</td>
+<?}
+?>
+
+<?
+if ($arProps["VISIBILITY"]["VALUE"] == 6 ){?>
+<td width="1px"><img src="<?=CFile::GetPath($arProps["ICONCAFILE"]["VALUE"]);?>" width="35px" height="35px"></td>
+<td>
+<div class="docLink" style="width: 530px;">
+<?
+if ( CSite::InGroup( array(6) ) ){
+$res123 = CIBlock::GetByID($_GET["BID"]);
+if($ar_res = $res123->GetNext())
+echo $arDoc123;} 
+else {?>
+<?if($USER->IsAuthorized()): // Если пользователь авторизован, то даем информацию?>
+<? echo "<p style='color:#666666;font-size:16px;'>У вас нет прав к просмотру документа</p>"; ?>
+<?endif;?>
+<?if(!$USER->IsAuthorized()): // Если пользователь не авторизован, то даем информацию?>
+<p style='color:#666666;font-size:16px;'>Для просмотра документа вам необходимо <a href="/auth/">войти</a> или <a href="/auth/reg.php">зарегистрироваться</a>.</p>
+<?endif;?>
+<?}?>
+</div>
+</td>
+<?}
+?>
+
+<?
+if ($arProps["VISIBILITY"]["VALUE"] == 5 ){?>
+<td width="1px"><img src="<?=CFile::GetPath($arProps["ICONCAFILE"]["VALUE"]);?>" width="35px" height="35px"></td>
+<td>
+<div class="docLink" style="width: 530px;">
+<?
+if ( CSite::InGroup( array(5) ) ){
+$res123 = CIBlock::GetByID($_GET["BID"]);
+if($ar_res = $res123->GetNext())
+echo $arDoc123;} 
+else {?>
+<?if($USER->IsAuthorized()): // Если пользователь авторизован, то даем информацию?>
+<? echo "<p style='color:#666666;font-size:16px;'>У вас нет прав к просмотру документа</p>"; ?>
+<?endif;?>
+<?if(!$USER->IsAuthorized()): // Если пользователь не авторизован, то даем информацию?>
+<p style='color:#666666;font-size:16px;'>Для просмотра документа вам необходимо <a href="/auth/">войти</a> или <a href="/auth/reg.php">зарегистрироваться</a>.</p>
+<?endif;?>
+<?}?>
+</div>
+</td>
+<?}
+?>
+
+<?
+if ($arProps["VISIBILITY"]["VALUE"] == 13 ){?>
+<td width="1px"><img src="<?=CFile::GetPath($arProps["ICONCAFILE"]["VALUE"]);?>" width="35px" height="35px"></td>
+<td>
+<div class="docLink" style="width: 530px;">
+<?
+if ( CSite::InGroup( array(13) ) ){
+$res123 = CIBlock::GetByID($_GET["BID"]);
+if($ar_res = $res123->GetNext())
+echo $arDoc123;} 
+else {?>
+<?if($USER->IsAuthorized()): // Если пользователь авторизован, то даем информацию?>
+<? echo "<p style='color:#666666;font-size:16px;'>У вас нет прав к просмотру документа</p>"; ?>
+<?endif;?>
+<?if(!$USER->IsAuthorized()): // Если пользователь не авторизован, то даем информацию?>
+<p style='color:#666666;font-size:16px;'>Для просмотра документа вам необходимо <a href="/auth/">войти</a> или <a href="/auth/reg.php">зарегистрироваться</a>.</p>
+<?endif;?>
+<?}?>
+</div>
+</td>
+<?}
+?>
+
+<?
+if ($arProps["VISIBILITY"]["VALUE"] == 10 ){?>
+<td width="1px"><img src="<?=CFile::GetPath($arProps["ICONCAFILE"]["VALUE"]);?>" width="35px" height="35px"></td>
+<td>
+<div class="docLink" style="width: 530px;">
+<?
+if ( CSite::InGroup( array(10) ) ){
+$res123 = CIBlock::GetByID($_GET["BID"]);
+if($ar_res = $res123->GetNext())
+echo $arDoc123;} 
+else {?>
+<?if($USER->IsAuthorized()): // Если пользователь авторизован, то даем информацию?>
+<? echo "<p style='color:#666666;font-size:16px;'>У вас нет прав к просмотру документа</p>"; ?>
+<?endif;?>
+<?if(!$USER->IsAuthorized()): // Если пользователь не авторизован, то даем информацию?>
+<p style='color:#666666;font-size:16px;'>Для просмотра документа вам необходимо <a href="/auth/">войти</a> или <a href="/auth/reg.php">зарегистрироваться</a>.</p>
+<?endif;?>
+<?}?>
+</div>
+</td>
+<?}
+?>
+
+<?
+if ($arProps["VISIBILITY"]["VALUE"] == 12 ){?>
+<td width="1px"><img src="<?=CFile::GetPath($arProps["ICONCAFILE"]["VALUE"]);?>" width="35px" height="35px"></td>
+<td>
+<div class="docLink" style="width: 530px;">
+<?
+if ( CSite::InGroup( array(12) ) ){
+$res123 = CIBlock::GetByID($_GET["BID"]);
+if($ar_res = $res123->GetNext())
+echo $arDoc123;} 
+else {?>
+<?if($USER->IsAuthorized()): // Если пользователь авторизован, то даем информацию?>
+<? echo "<p style='color:#666666;font-size:16px;'>У вас нет прав к просмотру документа</p>"; ?>
+<?endif;?>
+<?if(!$USER->IsAuthorized()): // Если пользователь не авторизован, то даем информацию?>
+<p style='color:#666666;font-size:16px;'>Для просмотра документа вам необходимо <a href="/auth/">войти</a> или <a href="/auth/reg.php">зарегистрироваться</a>.</p>
+<?endif;?>
+<?}?>
+</div>
+</td>
+<?}
+?>
+
+<?
+if ($arProps["VISIBILITY"]["VALUE"] == 11 ){?>
+<td width="1px"><img src="<?=CFile::GetPath($arProps["ICONCAFILE"]["VALUE"]);?>" width="35px" height="35px"></td>
+<td>
+<div class="docLink" style="width: 530px;">
+<?
+if ( CSite::InGroup( array(11) ) ){
+$res123 = CIBlock::GetByID($_GET["BID"]);
+if($ar_res = $res123->GetNext())
+echo $arDoc123;} 
+else {?>
+<?if($USER->IsAuthorized()): // Если пользователь авторизован, то даем информацию?>
+<? echo "<p style='color:#666666;font-size:16px;'>У вас нет прав к просмотру документа</p>"; ?>
+<?endif;?>
+<?if(!$USER->IsAuthorized()): // Если пользователь не авторизован, то даем информацию?>
+<p style='color:#666666;font-size:16px;'>Для просмотра документа вам необходимо <a href="/auth/">войти</a> или <a href="/auth/reg.php">зарегистрироваться</a>.</p>
+<?endif;?>
+<?}?>
+</div>
+</td>
+<?}
+?>
+
+<?
+if ($arProps["VISIBILITY"]["VALUE"] == 9 ){?>
+<td width="1px"><img src="<?=CFile::GetPath($arProps["ICONCAFILE"]["VALUE"]);?>" width="35px" height="35px"></td>
+<td>
+<div class="docLink" style="width: 530px;">
+<?
+if ( CSite::InGroup( array(9) ) ){
+$res123 = CIBlock::GetByID($_GET["BID"]);
+if($ar_res = $res123->GetNext())
+echo $arDoc123;} 
+else {?>
+<?if($USER->IsAuthorized()): // Если пользователь авторизован, то даем информацию?>
+<? echo "<p style='color:#666666;font-size:16px;'>У вас нет прав к просмотру документа</p>"; ?>
+<?endif;?>
+<?if(!$USER->IsAuthorized()): // Если пользователь не авторизован, то даем информацию?>
+<p style='color:#666666;font-size:16px;'>Для просмотра документа вам необходимо <a href="/auth/">войти</a> или <a href="/auth/reg.php">зарегистрироваться</a>.</p>
+<?endif;?>
+<?}?>
+</div>
+</td>
+<?}
+?>
+
+<?
+if ($arProps["VISIBILITY"]["VALUE"] == 8 ){?>
+<td width="1px"><img src="<?=CFile::GetPath($arProps["ICONCAFILE"]["VALUE"]);?>" width="35px" height="35px"></td>
+<td>
+<div class="docLink" style="width: 530px;">
+<?
+if ( CSite::InGroup( array(8) ) ){
+$res123 = CIBlock::GetByID($_GET["BID"]);
+if($ar_res = $res123->GetNext())
+echo $arDoc123;} 
+else {?>
+<?if($USER->IsAuthorized()): // Если пользователь авторизован, то даем информацию?>
+<? echo "<p style='color:#666666;font-size:16px;'>У вас нет прав к просмотру документа</p>"; ?>
+<?endif;?>
+<?if(!$USER->IsAuthorized()): // Если пользователь не авторизован, то даем информацию?>
+<p style='color:#666666;font-size:16px;'>Для просмотра документа вам необходимо <a href="/auth/">войти</a> или <a href="/auth/reg.php">зарегистрироваться</a>.</p>
+<?endif;?>
+<?}?>
+</div>
+</td>
+<?}
+?>
+
+<?
+if ($arProps["VISIBILITY"]["VALUE"] == 14 ){?>
+<td width="1px"><img src="<?=CFile::GetPath($arProps["ICONCAFILE"]["VALUE"]);?>" width="35px" height="35px"></td>
+<td>
+<div class="docLink" style="width: 530px;">
+<?
+if ( CSite::InGroup( array(14) ) ){
+$res123 = CIBlock::GetByID($_GET["BID"]);
+if($ar_res = $res123->GetNext())
+echo $arDoc123;} 
+else {?>
+<?if($USER->IsAuthorized()): // Если пользователь авторизован, то даем информацию?>
+<? echo "<p style='color:#666666;font-size:16px;'>У вас нет прав к просмотру документа</p>"; ?>
+<?endif;?>
+<?if(!$USER->IsAuthorized()): // Если пользователь не авторизован, то даем информацию?>
+<p style='color:#666666;font-size:16px;'>Для просмотра документа вам необходимо <a href="/auth/">войти</a> или <a href="/auth/reg.php">зарегистрироваться</a>.</p>
+<?endif;?>
+<?}?>
+	</div>
+	</td>
+<?}
+?>
+
+
+<?endforeach;?>
+
+
+<?foreach($arProps["DOC_FILE"]["VALUE"] as $arDoc):?>
+
+<?
+
+if ($arProps["DOWNLOAD"]["VALUE"] == ''){?>
+<?
+if ( CSite::InGroup( array(1,2,6,5,13,10,12,11,9,8) ) ):
+$res123 = CIBlock::GetByID($_GET["BID"]);
+if($ar_res = $res123->GetNext())
+echo "У вас нет доступа к скачиванию, обратитесь к администрации";
+endif;
+?>	
+<?}
+
+?>
+
+<?
+if ($arProps["DOWNLOAD"]["VALUE"] == 1 ){?>
+<?
+if ( CSite::InGroup( array(1) ) ){
+$res123 = CIBlock::GetByID($_GET["BID"]);
+if ($ar_res = $res123->GetNext()){?>
+<td><?print round(filesize($_SERVER['DOCUMENT_ROOT'].CFile::GetPath($arDoc))/1024/1024, 2)?> Мб. <a href="<?=CFile::GetPath($arDoc);?>" style="text-decoration: none;" download>    Скачать</a></td>
+<?}}
+else {?>
+<td>
+<div class="docLink" style="width: 530px;">
+<?if($USER->IsAuthorized()): // Если пользователь авторизован, то даем информацию?>
+<? echo "<p style='color:#666666;font-size:16px;'>У вас нет прав к скачиванию документа</p>"; ?>
+<?endif;?>
+<?if(!$USER->IsAuthorized()): // Если пользователь не авторизован, то даем информацию?>
+<p style='color:#666666;font-size:16px;'>Для скачивания документа вам необходимо <a href="/auth/">войти</a> или <a href="/auth/reg.php">зарегистрироваться</a>.</p>
+<?endif;?>
+<?}?>
+	</div>
+	  </td>
+<?}
+?>
+
+<?
+if ($arProps["DOWNLOAD"]["VALUE"] == 2 ){?>
+<?
+if ( CSite::InGroup( array(2) ) ){
+$res123 = CIBlock::GetByID($_GET["BID"]);
+if ($ar_res = $res123->GetNext()){?>
+<td><?print round(filesize($_SERVER['DOCUMENT_ROOT'].CFile::GetPath($arDoc))/1024/1024, 2)?> Мб. <a href="<?=CFile::GetPath($arDoc);?>" style="text-decoration: none;" download>    Скачать</a></td>
+<?}}
+else {?>
+<td>
+<div class="docLink" style="width: 530px;">
+<?if($USER->IsAuthorized()): // Если пользователь авторизован, то даем информацию?>
+<? echo "<p style='color:#666666;font-size:16px;'>У вас нет прав к скачиванию документа</p>"; ?>
+<?endif;?>
+<?if(!$USER->IsAuthorized()): // Если пользователь не авторизован, то даем информацию?>
+<p style='color:#666666;font-size:16px;'>Для скачивания документа вам необходимо <a href="/auth/">войти</a> или <a href="/auth/reg.php">зарегистрироваться</a>.</p>
+<?endif;?>
+<?}?>
+</div>
+	  </td>
+<?}
+?>
+
+<?
+if ($arProps["DOWNLOAD"]["VALUE"] == 5 ){?>
+<?
+if ( CSite::InGroup( array(5) ) ){
+$res123 = CIBlock::GetByID($_GET["BID"]);
+if ($ar_res = $res123->GetNext()){?>
+<td><?print round(filesize($_SERVER['DOCUMENT_ROOT'].CFile::GetPath($arDoc))/1024/1024, 2)?> Мб. <a href="<?=CFile::GetPath($arDoc);?>" style="text-decoration: none;" download>    Скачать</a></td>
+<?}}
+else {?>
+<td>
+<div class="docLink" style="width: 530px;">
+<?if($USER->IsAuthorized()): // Если пользователь авторизован, то даем информацию?>
+<? echo "<p style='color:#666666;font-size:16px;'>У вас нет прав к скачиванию документа</p>"; ?>
+<?endif;?>
+<?if(!$USER->IsAuthorized()): // Если пользователь не авторизован, то даем информацию?>
+<p style='color:#666666;font-size:16px;'>Для скачивания документа вам необходимо <a href="/auth/">войти</a> или <a href="/auth/reg.php">зарегистрироваться</a>.</p>
+<?endif;?>
+<?}?>
+</div>
+	  </td>
+<?}
+?>
+
+<?
+if ($arProps["DOWNLOAD"]["VALUE"] == 6 ){?>
+<?
+if ( CSite::InGroup( array(6) ) ){
+$res123 = CIBlock::GetByID($_GET["BID"]);
+if ($ar_res = $res123->GetNext()){?>
+<td><?print round(filesize($_SERVER['DOCUMENT_ROOT'].CFile::GetPath($arDoc))/1024/1024, 2)?> Мб. <a href="<?=CFile::GetPath($arDoc);?>" style="text-decoration: none;" download>    Скачать</a></td>
+<?}}
+else {?>
+<td>
+<div class="docLink" style="width: 530px;">
+<?if($USER->IsAuthorized()): // Если пользователь авторизован, то даем информацию?>
+<? echo "<p style='color:#666666;font-size:16px;'>У вас нет прав к скачиванию документа</p>"; ?>
+<?endif;?>
+<?if(!$USER->IsAuthorized()): // Если пользователь не авторизован, то даем информацию?>
+<p style='color:#666666;font-size:16px;'>Для скачивания документа вам необходимо <a href="/auth/">войти</a> или <a href="/auth/reg.php">зарегистрироваться</a>.</p>
+<?endif;?>
+<?}?>
+</div>
+	  </td>
+<?}
+?>
+
+<?
+if ($arProps["DOWNLOAD"]["VALUE"] == 13 ){?>
+<?
+if ( CSite::InGroup( array(13) ) ){
+$res123 = CIBlock::GetByID($_GET["BID"]);
+if ($ar_res = $res123->GetNext()){?>
+<td><?print round(filesize($_SERVER['DOCUMENT_ROOT'].CFile::GetPath($arDoc))/1024/1024, 2)?> Мб. <a href="<?=CFile::GetPath($arDoc);?>" style="text-decoration: none;" download>    Скачать</a></td>
+<?}}
+else {?>
+<td>
+<div class="docLink" style="width: 530px;">
+<?if($USER->IsAuthorized()): // Если пользователь авторизован, то даем информацию?>
+<? echo "<p style='color:#666666;font-size:16px;'>У вас нет прав к скачиванию документа</p>"; ?>
+<?endif;?>
+<?if(!$USER->IsAuthorized()): // Если пользователь не авторизован, то даем информацию?>
+<p style='color:#666666;font-size:16px;'>Для скачивания документа вам необходимо <a href="/auth/">войти</a> или <a href="/auth/reg.php">зарегистрироваться</a>.</p>
+<?endif;?>
+<?}?>
+</div>
+	  </td>
+<?}
+?>
+
+<?
+if ($arProps["DOWNLOAD"]["VALUE"] == 10 ){?>
+<?
+if ( CSite::InGroup( array(10) ) ){
+$res123 = CIBlock::GetByID($_GET["BID"]);
+if ($ar_res = $res123->GetNext()){?>
+<td><?print round(filesize($_SERVER['DOCUMENT_ROOT'].CFile::GetPath($arDoc))/1024/1024, 2)?> Мб. <a href="<?=CFile::GetPath($arDoc);?>" style="text-decoration: none;" download>    Скачать</a></td>
+<?}}
+else {?>
+<td>
+<div class="docLink" style="width: 530px;">
+<?if($USER->IsAuthorized()): // Если пользователь авторизован, то даем информацию?>
+<? echo "<p style='color:#666666;font-size:16px;'>У вас нет прав к скачиванию документа</p>"; ?>
+<?endif;?>
+<?if(!$USER->IsAuthorized()): // Если пользователь не авторизован, то даем информацию?>
+<p style='color:#666666;font-size:16px;'>Для скачивания документа вам необходимо <a href="/auth/">войти</a> или <a href="/auth/reg.php">зарегистрироваться</a>.</p>
+<?endif;?>
+<?}?>
+</div>
+	  </td>
+<?}
+?>
+
+<?
+if ($arProps["DOWNLOAD"]["VALUE"] == 12 ){?>
+<?
+if ( CSite::InGroup( array(12) ) ){
+$res123 = CIBlock::GetByID($_GET["BID"]);
+if ($ar_res = $res123->GetNext()){?>
+<td><?print round(filesize($_SERVER['DOCUMENT_ROOT'].CFile::GetPath($arDoc))/1024/1024, 2)?> Мб. <a href="<?=CFile::GetPath($arDoc);?>" style="text-decoration: none;" download>    Скачать</a></td>
+<?}}
+else {?>
+<td>
+<div class="docLink" style="width: 530px;">
+<?if($USER->IsAuthorized()): // Если пользователь авторизован, то даем информацию?>
+<? echo "<p style='color:#666666;font-size:16px;'>У вас нет прав к скачиванию документа</p>"; ?>
+<?endif;?>
+<?if(!$USER->IsAuthorized()): // Если пользователь не авторизован, то даем информацию?>
+<p style='color:#666666;font-size:16px;'>Для скачивания документа вам необходимо <a href="/auth/">войти</a> или <a href="/auth/reg.php">зарегистрироваться</a>.</p>
+<?endif;?>
+<?}?>
+</div>
+	  </td>
+<?}
+?>
+
+<?
+if ($arProps["DOWNLOAD"]["VALUE"] == 11 ){?>
+<?
+if ( CSite::InGroup( array(11) ) ){
+$res123 = CIBlock::GetByID($_GET["BID"]);
+if ($ar_res = $res123->GetNext()){?>
+<td><?print round(filesize($_SERVER['DOCUMENT_ROOT'].CFile::GetPath($arDoc))/1024/1024, 2)?> Мб. <a href="<?=CFile::GetPath($arDoc);?>" style="text-decoration: none;" download>    Скачать</a></td>
+<?}}
+else {?>
+<td>
+<div class="docLink" style="width: 530px;">
+<?if($USER->IsAuthorized()): // Если пользователь авторизован, то даем информацию?>
+<? echo "<p style='color:#666666;font-size:16px;'>У вас нет прав к скачиванию документа</p>"; ?>
+<?endif;?>
+<?if(!$USER->IsAuthorized()): // Если пользователь не авторизован, то даем информацию?>
+<p style='color:#666666;font-size:16px;'>Для скачивания документа вам необходимо <a href="/auth/">войти</a> или <a href="/auth/reg.php">зарегистрироваться</a>.</p>
+<?endif;?>
+<?}?>
+</div>
+	  </td>
+<?}
+?>
+
+<?
+if ($arProps["DOWNLOAD"]["VALUE"] == 9 ){?>
+<?
+if ( CSite::InGroup( array(9) ) ){
+$res123 = CIBlock::GetByID($_GET["BID"]);
+if ($ar_res = $res123->GetNext()){?>
+<td><?print round(filesize($_SERVER['DOCUMENT_ROOT'].CFile::GetPath($arDoc))/1024/1024, 2)?> Мб. <a href="<?=CFile::GetPath($arDoc);?>" style="text-decoration: none;" download>    Скачать</a></td>
+<?}}
+else {?>
+<td>
+<div class="docLink" style="width: 530px;">
+<?if($USER->IsAuthorized()): // Если пользователь авторизован, то даем информацию?>
+<? echo "<p style='color:#666666;font-size:16px;'>У вас нет прав к скачиванию документа</p>"; ?>
+<?endif;?>
+<?if(!$USER->IsAuthorized()): // Если пользователь не авторизован, то даем информацию?>
+<p style='color:#666666;font-size:16px;'>Для скачивания документа вам необходимо <a href="/auth/">войти</a> или <a href="/auth/reg.php">зарегистрироваться</a>.</p>
+<?endif;?>
+<?}?>
+</div>
+	  </td>
+<?}
+?>
+
+<?
+if ($arProps["DOWNLOAD"]["VALUE"] == 8 ){?>
+<?
+if ( CSite::InGroup( array(8) ) ){
+$res123 = CIBlock::GetByID($_GET["BID"]);
+if ($ar_res = $res123->GetNext()){?>
+<td><?print round(filesize($_SERVER['DOCUMENT_ROOT'].CFile::GetPath($arDoc))/1024/1024, 2)?> Мб. <a href="<?=CFile::GetPath($arDoc);?>" style="text-decoration: none;" download>    Скачать</a></td>
+<?}}
+else {?>
+<td>
+<div class="docLink" style="width: 530px;">
+<?if($USER->IsAuthorized()): // Если пользователь авторизован, то даем информацию?>
+<? echo "<p style='color:#666666;font-size:16px;'>У вас нет прав к скачиванию документа</p>"; ?>
+<?endif;?>
+<?if(!$USER->IsAuthorized()): // Если пользователь не авторизован, то даем информацию?>
+<p style='color:#666666;font-size:16px;'>Для скачивания документа вам необходимо <a href="/auth/">войти</a> или <a href="/auth/reg.php">зарегистрироваться</a>.</p>
+<?endif;?>
+<?}?>
+</div>
+	  </td>
+<?}
+?>
+
+<?
+if ($arProps["DOWNLOAD"]["VALUE"] == 14 ){?>
+<?
+if ( CSite::InGroup( array(14) ) ){
+$res123 = CIBlock::GetByID($_GET["BID"]);
+if ($ar_res = $res123->GetNext()){?>
+<td><?print round(filesize($_SERVER['DOCUMENT_ROOT'].CFile::GetPath($arDoc))/1024/1024, 2)?> Мб. <a href="<?=CFile::GetPath($arDoc);?>" style="text-decoration: none;" download>    Скачать</a></td>
+<?}}
+else {?>
+<td>
+<div class="docLink" style="width: 530px;">
+<?if($USER->IsAuthorized()): // Если пользователь авторизован, то даем информацию?>
+<? echo "<p style='color:#666666;font-size:16px;'>У вас нет прав к скачиванию документа</p>"; ?>
+<?endif;?>
+<?if(!$USER->IsAuthorized()): // Если пользователь не авторизован, то даем информацию?>
+<p style='color:#666666;font-size:16px;'>Для скачивания документа вам необходимо <a href="/auth/">войти</a> или <a href="/auth/reg.php">зарегистрироваться</a>.</p>
+<?endif;?>
+<?}?>
+</div>
+	  </td>
+<?}
+?>
+
+<?endforeach;?>
+
+
+
+
+
+</tr>
+<?}?> 
+</tbody>
+</table>
+
+</div>
+
+<?}?>
+</div>
+
+
